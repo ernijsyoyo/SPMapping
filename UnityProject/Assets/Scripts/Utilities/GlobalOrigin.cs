@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,6 +15,12 @@ namespace SP
         private static Quaternion rotation;
         private static bool posSet = false;
         private static bool rotSet = false;
+
+        public delegate void OrientationSet(EventArgs args);
+        /// <summary>
+        /// Event that is raised once position and rotation is set
+        /// </summary>
+        public static event OrientationSet OnOrientationSet;
 
         /// <summary>
         /// Get the global origin's location
@@ -34,13 +41,12 @@ namespace SP
         /// <returns>True if a position is set</returns>
         public static bool setPosition(Vector3 newPos)
         {
-            if (posSet == false)
-            {
+            if (posSet == false) {
                 position = newPos;
-                return true;
+                posSet = true;
+                attemptRaiseEvent();
             }
-            else
-                return false;
+            return posSet;
         }
         /// <summary>
         /// 
@@ -52,14 +58,22 @@ namespace SP
             if (!rotSet)
             {
                 rotation = newRot;
-                return true;
+                rotSet = true;
+                attemptRaiseEvent();
             }
-            else
-                return false;
+            return rotSet;
         }
 
-        public static void resetPosRot()
-        {
+        /// <summary>
+        /// Attempt to raise the onOrientationSet event if rot and pos is set
+        /// </summary>
+        private static void attemptRaiseEvent() {
+            if(rotSet && posSet) {
+                OnOrientationSet?.Invoke(EventArgs.Empty);
+            }
+        }
+
+        public static void resetPosRot() {
             position = Vector3.zero;
             rotation = new Quaternion(0, 0, 0, 0);
             posSet = false;
