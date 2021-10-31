@@ -16,6 +16,7 @@ namespace MagicLeap
     using UnityEngine;
     using UnityEngine.UI;
     using UnityEngine.XR.MagicLeap;
+    using SP;
 
     public class MLArucoTrackerExample : MonoBehaviour {
         /// <summary>
@@ -158,12 +159,10 @@ namespace MagicLeap
                     return;
                 }
 
-                // Or recognise special marker #49
-                if(marker.Id == 49)
-                {
-                    // Create a tracking offset here. TODO Confirm if this is OK
-                    var posOffset = marker.Position - Camera.main.transform.position;
-                    var rotOffset = marker.Rotation * Quaternion.Inverse(Camera.main.transform.rotation);
+                // Set the global origin to calibration marker's (#49) values
+                if(marker.Id == 49) {
+                    GlobalOrigin.setPosition(marker.Position);
+                    GlobalOrigin.setRot(marker.Rotation);
                 }
 
                 // Configure visualization of the markers and TrackingBehaviour for export
