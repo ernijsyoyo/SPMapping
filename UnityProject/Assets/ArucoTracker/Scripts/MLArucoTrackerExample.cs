@@ -46,32 +46,29 @@ namespace MagicLeap
             MLArucoTracker.OnMarkerStatusChange += OnMarkerStatusChange;
             SetStatusText();
             EnableAruco();
-            #endif
-        }
-
-        void Update()
-        {
-#if PLATFORM_LUMIN
-
-            
-            if(controller == null)
+#endif
+            if (controller == null)
             {
                 controller = MLInput.GetController(0);
                 return;
             }
-            
-            if (controller.TriggerValue >= 0.25f && !MLInputModuleBehavior.IsOverUI)
-            {
-                if(_triggerReleased)
-                {
-                    ToggleAruco();
-                    _triggerReleased = false;
-                }
-            }
-            else
-            {
-                _triggerReleased = true;
-            }
+        }
+
+        void Update()
+        {
+#if PLATFORM_LUMIN            
+            //if (controller.TriggerValue >= 0.25f && !MLInputModuleBehavior.IsOverUI)
+            //{
+            //    if(_triggerReleased)
+            //    {
+            //        ToggleAruco();
+            //        _triggerReleased = false;
+            //    }
+            //}
+            //else
+            //{
+            //    _triggerReleased = true;
+            //}
 #endif
         }
 

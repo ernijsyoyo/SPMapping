@@ -17,7 +17,7 @@ public class HelloWorld : MonoBehaviour
         if(test)
         {
             test = false;
-            print("Hello world");
+            print("Hello world Hello world Hello world Hello world Hello world");
         }
     }
 }
