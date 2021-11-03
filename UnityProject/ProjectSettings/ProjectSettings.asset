@@ -153,7 +153,7 @@ PlayerSettings:
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
-    Lumin: com.DefaultCompany.Project
+    Lumin: com.AalborgUni.MED07ARNav
     Standalone: com.AalborgUni.MED07ARNav
   buildNumber:
     Standalone: 0
@@ -689,7 +689,7 @@ PlayerSettings:
     m_ModelFolderPath: 
     m_PortalFolderPath: 
   luminCert:
-    m_CertPath: 
+    m_CertPath: /Users/annadavis/Downloads/privatekey/annascertificate.cert
     m_SignPackage: 1
   luminIsChannelApp: 0
   luminVersion:
