@@ -8,6 +8,7 @@ using System.Xml.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
+using MagicLeap.Core;
 
 namespace SP
 {
@@ -33,12 +34,14 @@ namespace SP
         public bool test = false;
         // alternative private void Start(){ExportScene(FindObjectsOfType<SPMesh>()); }
 
+        public NetworkManagerTCP TCP;
+
         private void Update()
         {
             if (test)
             {
                 test = false;
-                ExportScene(FindObjectsOfType<SPMesh>());
+                ExportScene();
             }
 
 
@@ -47,9 +50,11 @@ namespace SP
         /// <summary>
         /// Initiates a scene export
         /// </summary>
-        public void ExportScene(SPMesh[] meshes)
+        public void ExportScene()
         {
-            // Create arrays of all relevant objects 
+            // Create arrays of all relevant objects
+            var meshes = FindObjectsOfType<SPMesh>();
+            var markers = FindObjectsOfType<MLArucoTrackerBehavior>();
             // e.g.
 
 
@@ -73,6 +78,8 @@ namespace SP
 
             WriteMeshes(sceneNode, meshes);
 
+            //Function to export markers (WriteMeshes as an example)
+
             // Save the file
             doc.Save(xmlOutputPath);
             print("Scene exported at: " + xmlOutputPath);
@@ -88,6 +95,8 @@ namespace SP
         /// </summary>
         /// <param name="XmlRoot"></param>
         /// <param name="allmeshes"></param>
+
+        //markers
         private void WriteMeshes(XElement XmlRoot, SPMesh[] allmeshes)
         {
             if (allmeshes.Length < 1)
@@ -99,7 +108,6 @@ namespace SP
                 print("XMLRoot is null");
             }
             XmlRoot.Document.Root.Add(new XComment("Meshes"));
-            List<XElement> nodes = new List<XElement>();
 
             foreach (var mesh in allmeshes)
             {
@@ -107,7 +115,7 @@ namespace SP
 
 
                 var MeshNode = GetMeshNode(mesh);
-                nodes.Add(MeshNode);
+                XmlRoot.Add(MeshNode);
 
 
             }
@@ -119,12 +127,20 @@ namespace SP
         /// <param name="mesh">Mesh for which to retrieve the formatted XML node</param>
         /// <param name="transform">Optional transform</param>
         /// <returns></returns>
+
+        // Get MarkerNode (pos, rot)
+        // e.g. marker.gameObject.transform.position
+        // e.g. marker.gameObject.transform.rotation.eulerAngles
+        // before export, calculate position relative to the global position - Scripts - Utilities - TransformConversions Lines 135/136
+
         private XElement GetMeshNode(SPMesh mesh)
         {
             List<Vector3> GeometryVertices = mesh.GetVertices();
             List<int> trianglePos = mesh.getMeshFacesNoDupes(); //getTrianglesObject
 
             // Writes the root mesh node with a pivot point
+
+            //marker, add values relative to the global position (to pos, rot)
             var MeshNode = new XElement("Mesh",
                                 new XAttribute("id", "mesh:" + mesh.gameObject.name),
                                 new XAttribute("pos", gameObject.transform.position),
