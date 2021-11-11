@@ -44,7 +44,6 @@ namespace SP
                 ExportScene();
             }
 
-
         }
 
         /// <summary>
@@ -54,7 +53,7 @@ namespace SP
         {
             // Create arrays of all relevant objects
             var meshes = FindObjectsOfType<SPMesh>();
-            var markers = FindObjectsOfType<MLArucoTrackerBehavior>();
+            var marker = FindObjectsOfType<MLArucoTrackerBehavior>();
             // e.g.
 
 
@@ -80,6 +79,8 @@ namespace SP
 
             //Function to export markers (WriteMeshes as an example)
 
+            WriteMarkers(sceneNode, markers);
+
             // Save the file
             doc.Save(xmlOutputPath);
             print("Scene exported at: " + xmlOutputPath);
@@ -96,7 +97,7 @@ namespace SP
         /// <param name="XmlRoot"></param>
         /// <param name="allmeshes"></param>
 
-        //markers
+     
         private void WriteMeshes(XElement XmlRoot, SPMesh[] allmeshes)
         {
             if (allmeshes.Length < 1)
@@ -117,9 +118,32 @@ namespace SP
                 var MeshNode = GetMeshNode(mesh);
                 XmlRoot.Add(MeshNode);
 
-
             }
         }
+
+        // Get MarkerNode (pos, rot)
+        private void WriteMarkers(XElement XmlRoot, SPMarker[] allmarkers)
+        {
+            if (allmarkers.Length < 1)
+            {
+                return;
+            }
+
+            if (XmlRoot == null)
+            {
+                print("XMLRoot is null");
+            }
+            XmlRoot.Document.Root.Add(new XComment("Markers"));
+
+            foreach (var marker in allmarkers)
+            {
+                var MarkerPos = marker.gameObject.transform.position;
+                var MarkerRot = marker.gameObject.transform.rotation.eulerAngles;
+                XmlRoot.Add(MarkerPos);
+                XmlRoot.Add(MarkerRot);
+            }
+        }
+
 
         /// <summary>
         /// Get an EIF formatted Mesh node
@@ -128,9 +152,6 @@ namespace SP
         /// <param name="transform">Optional transform</param>
         /// <returns></returns>
 
-        // Get MarkerNode (pos, rot)
-        // e.g. marker.gameObject.transform.position
-        // e.g. marker.gameObject.transform.rotation.eulerAngles
         // before export, calculate position relative to the global position - Scripts - Utilities - TransformConversions Lines 135/136
 
         private XElement GetMeshNode(SPMesh mesh)
@@ -138,9 +159,11 @@ namespace SP
             List<Vector3> GeometryVertices = mesh.GetVertices();
             List<int> trianglePos = mesh.getMeshFacesNoDupes(); //getTrianglesObject
 
-            // Writes the root mesh node with a pivot point
-
             //marker, add values relative to the global position (to pos, rot)
+            //List<Vector3> MarkerPos = 
+            //List<Quaternion> MarkerRot = 
+
+            // Writes the root mesh node with a pivot point
             var MeshNode = new XElement("Mesh",
                                 new XAttribute("id", "mesh:" + mesh.gameObject.name),
                                 new XAttribute("pos", gameObject.transform.position),
