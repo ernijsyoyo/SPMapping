@@ -11,8 +11,7 @@ namespace SP
     /// <summary>
     /// Class for specifying a custom Mesh entity
     /// </summary>
-    [CanEditMultipleObjects]
-    [ExecuteInEditMode]
+
     public class SPMesh : MonoBehaviour
     {
         /// <summary>

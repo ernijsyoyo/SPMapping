@@ -61,6 +61,8 @@ namespace SP
 				clientReceiveThread = new Thread(new ThreadStart(ListenForData));
 				clientReceiveThread.IsBackground = true;
 				clientReceiveThread.Start();
+
+				print("Connection was succesful");
 			}
 			catch (Exception e)
 			{

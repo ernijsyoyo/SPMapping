@@ -53,7 +53,7 @@ namespace SP
         {
             // Create arrays of all relevant objects
             var meshes = FindObjectsOfType<SPMesh>();
-            var marker = FindObjectsOfType<MLArucoTrackerBehavior>();
+            var markers = FindObjectsOfType<MLArucoTrackerBehavior>();
             // e.g.
 
 
@@ -70,7 +70,11 @@ namespace SP
             WriteRootNode(doc);
 
             // Open a dialog window for saving the output path
+            #if UNITY_EDITOR
             xmlOutputPath = UnityEditor.EditorUtility.SaveFilePanel("Save scene as XML", "", "sceneName", "xml");
+            #else
+            xmlOutputPath = "/tmp/Scene.xml";
+            #endif
             XElement sceneNode = doc.Document.Root; // Get the root node
 
             // Write elements according to their type
@@ -83,6 +87,8 @@ namespace SP
 
             // Save the file
             doc.Save(xmlOutputPath);
+            print(doc.ToString());
+            TCP.sendStringMessage(doc.ToString());
             print("Scene exported at: " + xmlOutputPath);
         }
 
@@ -122,7 +128,7 @@ namespace SP
         }
 
         // Get MarkerNode (pos, rot)
-        private void WriteMarkers(XElement XmlRoot, SPMarker[] allmarkers)
+        private void WriteMarkers(XElement XmlRoot, MLArucoTrackerBehavior[] allmarkers)
         {
             if (allmarkers.Length < 1)
             {
@@ -137,11 +143,17 @@ namespace SP
 
             foreach (var marker in allmarkers)
             {
-                var MarkerPos = marker.gameObject.transform.position;
-                var MarkerRot = marker.gameObject.transform.rotation.eulerAngles;
-                XmlRoot.Add(MarkerPos);
-                XmlRoot.Add(MarkerRot);
+                var MarkerPos = TransformConversions.posRelativeTo(GlobalOrigin.getPosition(), marker.gameObject.transform.position);
+                var MarkerRot = TransformConversions.rotRelativeTo(GlobalOrigin.getRot(), marker.gameObject.transform.rotation).eulerAngles;
+
+                var MeshNode = new XElement("Marker",
+                          new XAttribute("id", marker.MarkerId),
+                          new XAttribute("pos", MarkerPos),
+                          new XAttribute("rot", MarkerRot));
+
+                XmlRoot.Add(MeshNode);
             }
+
         }
 
 
