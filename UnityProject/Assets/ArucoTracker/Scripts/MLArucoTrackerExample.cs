@@ -37,8 +37,6 @@ namespace MagicLeap
         private bool _triggerReleased = true;
         private MLInput.Controller controller = null;
 
-        // TODO Implement a dictionary that holds marker
-
         void Start()
         {
 #if PLATFORM_LUMIN

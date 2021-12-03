@@ -11,6 +11,9 @@ EditorBuildSettings:
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
+  - enabled: 0
+    path: Assets/Scenes/ExampleScene.unity
+    guid: 42b9bc6cd049c4844804e67fb861a548
   m_configObjects:
     com.unity.xr.magicleap.magic_leap_settings: {fileID: 11400000, guid: f73fecfd0ff20430eb64deb2f6e011e7, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 193c47604ad7b4babb907b4a9aafa19f, type: 2}

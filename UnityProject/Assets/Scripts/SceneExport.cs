@@ -38,6 +38,7 @@ namespace SP
 
         private void Update()
         {
+            // Changes this to true to be enabled
             if (test)
             {
                 test = false;

@@ -57,7 +57,7 @@ MonoBehaviour:
       m_Enabled: 1
       m_Name: GesturesConfig
     - m_ApiLevel: 1
-      m_Enabled: 0
+      m_Enabled: 1
       m_Name: GesturesSubscribe
     - m_ApiLevel: 6
       m_Enabled: 1
@@ -78,7 +78,7 @@ MonoBehaviour:
       m_Enabled: 1
       m_Name: LowLatencyLightwear
     - m_ApiLevel: 1
-      m_Enabled: 1
+      m_Enabled: 0
       m_Name: MusicService
     - m_ApiLevel: 1
       m_Enabled: 1
@@ -119,16 +119,16 @@ MonoBehaviour:
   - m_Name: Sensitive
     m_Privileges:
     - m_ApiLevel: 2
-      m_Enabled: 1
+      m_Enabled: 0
       m_Name: AddressBookRead
     - m_ApiLevel: 1
-      m_Enabled: 1
+      m_Enabled: 0
       m_Name: AddressBookWrite
     - m_ApiLevel: 4
-      m_Enabled: 1
+      m_Enabled: 0
       m_Name: CoarseLocation
     - m_ApiLevel: 8
-      m_Enabled: 1
+      m_Enabled: 0
       m_Name: Expressions
     - m_ApiLevel: 1
       m_Enabled: 1
@@ -139,10 +139,10 @@ MonoBehaviour:
   - m_Name: Reality
     m_Privileges:
     - m_ApiLevel: 1
-      m_Enabled: 1
+      m_Enabled: 0
       m_Name: AudioCaptureMic
     - m_ApiLevel: 1
-      m_Enabled: 1
+      m_Enabled: 0
       m_Name: AudioRecognizer
     - m_ApiLevel: 1
       m_Enabled: 1
@@ -160,5 +160,5 @@ MonoBehaviour:
       m_Enabled: 1
       m_Name: FineLocation
     - m_ApiLevel: 1
-      m_Enabled: 1
+      m_Enabled: 0
       m_Name: VoiceInput
