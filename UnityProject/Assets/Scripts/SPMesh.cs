@@ -33,6 +33,8 @@ namespace SP
             return (gameObject.GetComponent<MeshFilter>() != null);
         }
 
+        private Vector3[] verticesNoDupesArray = null;
+
 
         /// <summary>
         /// Get number of vertices on the object for statistical purposes
@@ -167,6 +169,11 @@ namespace SP
             return vertexPositions;
         }
 
+        public void resetVerticesNoDupesArray()
+        {
+            verticesNoDupesArray = null;
+        }
+
         /// <summary>
         /// Get vertices for a whole Mesh entity and remove duplicates
         /// </summary>
@@ -176,13 +183,24 @@ namespace SP
             List<Vector3> allVertices = getVerticesObject();
             List<Vector3> verticesNoDupes = new List<Vector3>();
 
+            if(verticesNoDupesArray != null)
+            {
+                return verticesNoDupesArray.ToList();
+            }
+
             for (int i = 0; i < allVertices.Count; i++)
             {
+                if(i % 100 == 0)
+                {
+                    print("Fetching vertices.." + i + "/" + allVertices.Count);
+                }
+                
                 if (!verticesNoDupes.Contains(allVertices[i]))
                 {
                     verticesNoDupes.Add(allVertices[i]);
                 }
             }
+            verticesNoDupesArray = verticesNoDupes.ToArray();
             return verticesNoDupes;
         }
 
@@ -210,6 +228,10 @@ namespace SP
 
             for (int i = 0; i < allFaces.Count; i++)
             {
+                if (i % 100 == 0)
+                {
+                    print("Fetching faces.." + i + "/" + allFaces.Count);
+                }
                 for (int j = 0; j < verticesNoDupes.Count; j++)
                 {
 

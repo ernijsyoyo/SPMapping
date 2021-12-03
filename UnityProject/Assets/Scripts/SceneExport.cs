@@ -68,6 +68,7 @@ namespace SP
                 new XComment(" Mapped Environment for Indoor Navigation "),
                 new XComment(" Scene exported at time: " + DateTime.Now.ToString("HH:mm:ss; dd.MM.yyyy "))
             );
+            print("Writing the root..");
             WriteRootNode(doc);
 
             // Open a dialog window for saving the output path
@@ -80,17 +81,19 @@ namespace SP
 
             // Write elements according to their type
 
+            print("Writing meshes..");
             WriteMeshes(sceneNode, meshes);
 
             //Function to export markers (WriteMeshes as an example)
-
+            print("Writing Markers..");
             WriteMarkers(sceneNode, markers);
 
             // Save the file
-            doc.Save(xmlOutputPath);
-            print(doc.ToString());
+            //doc.Save(xmlOutputPath);
+            //print(doc.ToString());
+            print("Exporting the scene...");
             TCP.sendStringMessage(doc.ToString());
-            print("Scene exported at: " + xmlOutputPath);
+            //print("Scene exported at: " + xmlOutputPath);
         }
 
         private void WriteRootNode(XDocument doc)
@@ -169,6 +172,7 @@ namespace SP
 
         private XElement GetMeshNode(SPMesh mesh)
         {
+            mesh.resetVerticesNoDupesArray();
             List<Vector3> GeometryVertices = mesh.GetVertices();
             List<int> trianglePos = mesh.getMeshFacesNoDupes(); //getTrianglesObject
 

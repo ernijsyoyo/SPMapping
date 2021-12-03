@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -34,13 +36,14 @@ namespace SP
 		/// Bool used as a test button
 		/// </summary>
 		public bool test = false;
+		public bool test2 = false;
 		#endregion
 
 		// Use this for initialization 	
 		void Start()
 		{
 			print("TCP Endpoint: " + ipAddress + ":" + port);
-			ConnectToTcpServer();
+			//ConnectToTcpServer();
 		}
 
 		private void Update()
@@ -48,21 +51,28 @@ namespace SP
 			if (test)
 			{
 				test = false;
-				sendTestMessage();
+				ConnectToTcpServer();
 			}
+			if(test2)
+            {
+				test2 = false;
+				sendTestMessage();
+            }
 		}
 		/// <summary> 	
 		/// Setup socket connection. 	
 		/// </summary> 	
-		private void ConnectToTcpServer()
+		public void ConnectToTcpServer()
 		{
 			try
 			{
+				//StartCoroutine(ListenForData());
 				clientReceiveThread = new Thread(new ThreadStart(ListenForData));
-				clientReceiveThread.IsBackground = true;
+				Debug.Log("Starting the listener thread..");
+				
 				clientReceiveThread.Start();
 
-				print("Connection was succesful");
+				//print("Connection was succesful");
 			}
 			catch (Exception e)
 			{
@@ -72,8 +82,9 @@ namespace SP
 		/// <summary> 	
 		/// Runs in background clientReceiveThread; Listens for incomming data. 	
 		/// </summary>     
-		private void ListenForData()
+		public void ListenForData()
 		{
+			Debug.Log("Attempting to connect to: " + ipAddress.ToString() + ":" + port.ToString());
 			try
 			{
 				socketConnection = new TcpClient(ipAddress, port);
@@ -95,6 +106,7 @@ namespace SP
 							Debug.Log("server message received as: " + serverMessage);
 						}
 					}
+					
 				}
 			}
 			catch (SocketException socketException)
