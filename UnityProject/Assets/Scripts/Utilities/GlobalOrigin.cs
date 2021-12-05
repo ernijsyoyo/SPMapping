@@ -42,6 +42,7 @@ namespace SP
         public static bool setPosition(Vector3 newPos)
         {
             if (posSet == false) {
+                Debug.Log("Global position set to: " + newPos);
                 position = newPos;
                 posSet = true;
                 attemptRaiseEvent();
@@ -57,6 +58,7 @@ namespace SP
         {
             if (!rotSet)
             {
+                Debug.Log("Global rot set to: " + newRot.eulerAngles);
                 rotation = newRot;
                 rotSet = true;
                 attemptRaiseEvent();

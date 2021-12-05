@@ -190,8 +190,7 @@ namespace SP
 
             for (int i = 0; i < allVertices.Count; i++)
             {
-                if(i % 100 == 0)
-                {
+                if(i % 1000 == 0) {
                     print("Fetching vertices.." + i + "/" + allVertices.Count);
                 }
                 
@@ -228,7 +227,7 @@ namespace SP
 
             for (int i = 0; i < allFaces.Count; i++)
             {
-                if (i % 100 == 0)
+                if (i % 1000 == 0)
                 {
                     print("Fetching faces.." + i + "/" + allFaces.Count);
                 }

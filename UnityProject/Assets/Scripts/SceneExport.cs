@@ -54,7 +54,7 @@ namespace SP
         {
             // Create arrays of all relevant objects
             var meshes = FindObjectsOfType<SPMesh>();
-            var markers = FindObjectsOfType<MLArucoTrackerBehavior>();
+            var markers = FindObjectsOfType<SpArucoMarker>();
             // e.g.
 
 
@@ -132,7 +132,7 @@ namespace SP
         }
 
         // Get MarkerNode (pos, rot)
-        private void WriteMarkers(XElement XmlRoot, MLArucoTrackerBehavior[] allmarkers)
+        private void WriteMarkers(XElement XmlRoot, SpArucoMarker[] allmarkers)
         {
             if (allmarkers.Length < 1)
             {
@@ -151,7 +151,7 @@ namespace SP
                 var MarkerRot = TransformConversions.rotRelativeTo(GlobalOrigin.getRot(), marker.gameObject.transform.rotation).eulerAngles;
 
                 var MeshNode = new XElement("Marker",
-                          new XAttribute("id", marker.MarkerId),
+                          new XAttribute("id", marker.ID),
                           new XAttribute("pos", MarkerPos),
                           new XAttribute("rot", MarkerRot));
 
@@ -178,13 +178,16 @@ namespace SP
 
             //marker, add values relative to the global position (to pos, rot)
             //List<Vector3> MarkerPos = 
-            //List<Quaternion> MarkerRot = 
+            //List<Quaternion> MarkerRot =
+
+            var meshPos = TransformConversions.posRelativeTo(GlobalOrigin.getPosition(), gameObject.transform.position);
+            var meshRot = TransformConversions.rotRelativeTo(GlobalOrigin.getRot(), gameObject.transform.rotation).eulerAngles;
 
             // Writes the root mesh node with a pivot point
             var MeshNode = new XElement("Mesh",
                                 new XAttribute("id", "mesh:" + mesh.gameObject.name),
-                                new XAttribute("pos", gameObject.transform.position),
-                                new XAttribute("rot", gameObject.transform.rotation));
+                                new XAttribute("pos", meshPos),
+                                new XAttribute("rot", meshRot));
 
             // Writes vertices
             for (int i = 0; i < GeometryVertices.Count; i++)
