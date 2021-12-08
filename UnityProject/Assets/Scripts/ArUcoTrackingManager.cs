@@ -90,11 +90,12 @@ public class ArUcoTrackingManager : MonoBehaviour
             }
 
             if(_arucoMarkerIds.Contains(marker.Id)) {
-                return;
+                //return;
             }
             //Instantiate the prefab that will follow that marker -- note: the TrackerBehavior component will handle position and rotation.
             GameObject arucoMarker = Instantiate(MLArucoMarkerPrefab);
 
+            arucoMarker.GetComponent<SpArucoMarker>().ID = marker.Id;
             arucoMarker.transform.position = marker.Position;
             arucoMarker.transform.rotation = marker.Rotation;
 
