@@ -11,10 +11,11 @@ namespace SP
     /// </summary>
     public static class GlobalOrigin
     {
-        private static Vector3 position;
+        private static Transform globalTransform;
         private static Quaternion rotation;
         private static bool posSet = false;
         private static bool rotSet = false;
+        private static int counter = 0;
 
         public delegate void OrientationSet(EventArgs args);
         /// <summary>
@@ -26,7 +27,7 @@ namespace SP
         /// Get the global origin's location
         /// </summary>
         /// <returns></returns>
-        public static Vector3 getPosition() { return position; }
+        public static Transform getTransform() { return globalTransform; }
 
         /// <summary>
         /// Get the global origin's rotation
@@ -39,13 +40,18 @@ namespace SP
         /// </summary>
         /// <param name="newPos"></param>
         /// <returns>True if a position is set</returns>
-        public static bool setPosition(Vector3 newPos)
+        public static bool setTransform(Transform newTransform)
         {
             if (posSet == false) {
-                Debug.Log("Global position set to: " + newPos);
-                position = newPos;
-                posSet = true;
-                attemptRaiseEvent();
+                if (counter > 25)
+                {
+                    Debug.Log("rotation set");
+                    posSet = true;
+                    attemptRaiseEvent();
+                }
+                counter += 1;
+                Debug.Log("Setting global reference point.. " + counter);
+                globalTransform = newTransform;
             }
             return posSet;
         }
@@ -58,10 +64,13 @@ namespace SP
         {
             if (!rotSet)
             {
-                Debug.Log("Global rot set to: " + newRot.eulerAngles);
+                if (counter > 25)
+                {
+                    Debug.Log("rotation set");
+                    rotSet = true;
+                    attemptRaiseEvent();
+                }
                 rotation = newRot;
-                rotSet = true;
-                attemptRaiseEvent();
             }
             return rotSet;
         }
@@ -69,14 +78,16 @@ namespace SP
         /// <summary>
         /// Attempt to raise the onOrientationSet event if rot and pos is set
         /// </summary>
-        private static void attemptRaiseEvent() {
-            if(rotSet && posSet) {
+        private static void attemptRaiseEvent()
+        {
+            if (rotSet && posSet)
+            {
                 OnOrientationSet?.Invoke(EventArgs.Empty);
             }
         }
 
-        public static void resetPosRot() {
-            position = Vector3.zero;
+        public static void resetPosRot()
+        {
             rotation = new Quaternion(0, 0, 0, 0);
             posSet = false;
             rotSet = false;

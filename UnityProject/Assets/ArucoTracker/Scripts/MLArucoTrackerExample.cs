@@ -156,8 +156,11 @@ namespace MagicLeap
 
                 // Set the global origin to calibration marker's (#49) values
                 if(marker.Id == 49) {
-                    GlobalOrigin.setPosition(marker.Position);
-                    GlobalOrigin.setRot(marker.Rotation);
+                    var go = new GameObject();
+                    go.transform.position = marker.Position;
+                    go.transform.rotation = marker.Rotation;
+                    SP.GlobalOrigin.setTransform(go.transform);
+                    SP.GlobalOrigin.setRot(marker.Rotation);
                 }
 
                 // Configure visualization of the markers and TrackingBehaviour for export

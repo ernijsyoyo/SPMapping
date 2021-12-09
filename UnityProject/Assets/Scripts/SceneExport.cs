@@ -54,7 +54,7 @@ namespace SP
         {
             // Create arrays of all relevant objects
             var meshes = FindObjectsOfType<SPMesh>();
-            var markers = FindObjectsOfType<SpArucoMarker>();
+            var markers = FindObjectsOfType<MLArucoTrackerBehavior>();
             // e.g.
 
 
@@ -132,7 +132,7 @@ namespace SP
         }
 
         // Get MarkerNode (pos, rot)
-        private void WriteMarkers(XElement XmlRoot, SpArucoMarker[] allmarkers)
+        private void WriteMarkers(XElement XmlRoot, MLArucoTrackerBehavior[] allmarkers)
         {
             if (allmarkers.Length < 1)
             {
@@ -147,11 +147,11 @@ namespace SP
 
             foreach (var marker in allmarkers)
             {
-                var MarkerPos = TransformConversions.posRelativeTo(GlobalOrigin.getPosition(), marker.gameObject.transform.position);
+                var MarkerPos = TransformConversions.posRelativeTo(GlobalOrigin.getTransform(), marker.gameObject.transform);
                 var MarkerRot = TransformConversions.rotRelativeTo(GlobalOrigin.getRot(), marker.gameObject.transform.rotation).eulerAngles;
 
                 var MeshNode = new XElement("Marker",
-                          new XAttribute("id", marker.ID),
+                          new XAttribute("id", marker.MarkerId),
                           new XAttribute("pos", MarkerPos),
                           new XAttribute("rot", MarkerRot));
 
@@ -180,7 +180,7 @@ namespace SP
             //List<Vector3> MarkerPos = 
             //List<Quaternion> MarkerRot =
 
-            var meshPos = TransformConversions.posRelativeTo(GlobalOrigin.getPosition(), gameObject.transform.position);
+            var meshPos = TransformConversions.posRelativeTo(GlobalOrigin.getTransform(), gameObject.transform);
             var meshRot = TransformConversions.rotRelativeTo(GlobalOrigin.getRot(), gameObject.transform.rotation).eulerAngles;
 
             // Writes the root mesh node with a pivot point

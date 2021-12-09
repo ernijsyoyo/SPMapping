@@ -13,6 +13,7 @@ public class ArUcoTrackingManager : MonoBehaviour
 
     //Add a prefab that will display when we've detected a marker
     public GameObject MLArucoMarkerPrefab;
+    public int counter = 0;
 
     void Start()
     {
@@ -84,37 +85,29 @@ public class ArUcoTrackingManager : MonoBehaviour
             // Set the global origin to calibration marker's (#49) values
             if (marker.Id == 49)
             {
-                print("Recognized marker ID49.. setting global reference point");
-                SP.GlobalOrigin.setPosition(marker.Position);
+                var go = new GameObject();
+                go.transform.position = marker.Position;
+                go.transform.rotation = marker.Rotation;
+                SP.GlobalOrigin.setTransform(go.transform);
                 SP.GlobalOrigin.setRot(marker.Rotation);
             }
 
-            if(_arucoMarkerIds.Contains(marker.Id)) {
-                //return;
-            }
             //Instantiate the prefab that will follow that marker -- note: the TrackerBehavior component will handle position and rotation.
             GameObject arucoMarker = Instantiate(MLArucoMarkerPrefab);
-
-            arucoMarker.GetComponent<SpArucoMarker>().ID = marker.Id;
-            arucoMarker.transform.position = marker.Position;
-            arucoMarker.transform.rotation = marker.Rotation;
-
-
             //Adjust the properties of the TrackerBehavior component to add the markerID and the dictionary we're comparing the marker to.
-            //MLArucoTrackerBehavior arucoBehavior = arucoMarker.GetComponent<MLArucoTrackerBehavior>();
-            //arucoBehavior.MarkerId = marker.Id;
-            //arucoBehavior.MarkerDictionary = MLArucoTracker.TrackerSettings.Dictionary;
+            MLArucoTrackerBehavior arucoBehavior = arucoMarker.GetComponent<MLArucoTrackerBehavior>();
+            arucoBehavior.MarkerId = marker.Id;
+            arucoBehavior.MarkerDictionary = MLArucoTracker.TrackerSettings.Dictionary;
             //Add the markerId so we don't do this again
             _arucoMarkerIds.Add(marker.Id);
         }
         else if (_arucoMarkerIds.Contains(marker.Id))
         {
             //if the marker's status indicates it's no longer tracked, remove it from the list so if it comes back we'll detect it.
-            //_arucoMarkerIds.Remove(marker.Id);
+            _arucoMarkerIds.Remove(marker.Id);
         }
 
         // Print currently tracked markers
         SetStatusText();
     }
 }
-

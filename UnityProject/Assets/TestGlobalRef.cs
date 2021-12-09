@@ -13,10 +13,10 @@ public class TestGlobalRef : MonoBehaviour
         if(test)
         {
             test = false;
-            SP.GlobalOrigin.setPosition(gameObject.transform.position);
+            SP.GlobalOrigin.setTransform(gameObject.transform);
             SP.GlobalOrigin.setRot(gameObject.transform.rotation);
 
-            print(SP.TransformConversions.posRelativeTo(SP.GlobalOrigin.getPosition(), gameObject.transform.position));
+            print(SP.TransformConversions.posRelativeTo(SP.GlobalOrigin.getTransform(), gameObject.transform));
         }
     }
 }

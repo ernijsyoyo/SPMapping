@@ -9,8 +9,8 @@ namespace SP
     public class TransformConversions : MonoBehaviour
     {
         // For testing..
-        public GameObject pivot;
-        public GameObject origin;
+        public Transform pivot;
+        public Transform origin;
         public bool test;
 
         private void Update()
@@ -18,8 +18,8 @@ namespace SP
             if (test)
             {
                 test = false;
-                print(posRelativeTo(pivot.transform.position, origin.transform.position));
-                print(rotRelativeTo(pivot.transform.rotation, origin.transform.rotation).eulerAngles);
+                //print(posRelativeTo(pivot.transform.position, origin.transform.position));
+                //print(rotRelativeTo(pivot.transform.rotation, origin.transform.rotation).eulerAngles);
             }
         }
 
@@ -29,9 +29,9 @@ namespace SP
         /// <param name="pivot">Pivot point that origin is relative to</param>
         /// <param name="origin">Entity's origin that we wish to calculate a relative position to</param>
         /// <returns></returns>
-        public static Vector3 posRelativeTo(Vector3 pivot, Vector3 origin)
+        public static Vector3 posRelativeTo(Transform _pivot, Transform _origin)
         {
-            return origin - pivot;
+            return _pivot.InverseTransformPoint(_origin.position);
         }
 
         /// <summary>
