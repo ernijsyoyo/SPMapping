@@ -5,14 +5,14 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class TestGlobalRef : MonoBehaviour
 {
-    public bool test = false;
+    public bool SetGlobalRef = false;
 
     // Update is called once per frame
     void Update()
     {
-        if(test)
+        if(SetGlobalRef)
         {
-            test = false;
+            SetGlobalRef = false;
             SP.GlobalOrigin.setTransform(gameObject.transform);
             SP.GlobalOrigin.setRot(gameObject.transform.rotation);
 

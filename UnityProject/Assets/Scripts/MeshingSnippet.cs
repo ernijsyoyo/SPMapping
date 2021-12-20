@@ -1,3 +1,5 @@
+// Source https://developer.magicleap.com/en-us/learn/guides/meshing-snippet-unity
+
 using UnityEngine;
 using UnityEngine.XR.MagicLeap;
 

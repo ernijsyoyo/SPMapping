@@ -35,62 +35,49 @@ namespace SP
 		/// <summary>
 		/// Bool used as a test button
 		/// </summary>
-		public bool test = false;
-		public bool test2 = false;
+		public bool testAttemptConnect = false;
+		public bool testAttemptSendMsg = false;
 		#endregion
 
 		// Use this for initialization 	
-		void Start()
-		{
+		void Start() {
 			print("TCP Endpoint: " + ipAddress + ":" + port);
-			//ConnectToTcpServer();
 		}
 
 		private void Update()
 		{
-			if (test)
-			{
-				test = false;
+			if (testAttemptConnect) {
+				testAttemptConnect = false;
 				ConnectToTcpServer();
 			}
-			if(test2)
-            {
-				test2 = false;
+			if(testAttemptSendMsg) {
+				testAttemptSendMsg = false;
 				sendTestMessage();
             }
 		}
 		/// <summary> 	
 		/// Setup socket connection. 	
 		/// </summary> 	
-		public void ConnectToTcpServer()
-		{
-			try
-			{
-				//StartCoroutine(ListenForData());
+		public void ConnectToTcpServer() {
+			try	{
 				clientReceiveThread = new Thread(new ThreadStart(ListenForData));
 				Debug.Log("Starting the listener thread..");
-				
 				clientReceiveThread.Start();
-
-				//print("Connection was succesful");
 			}
-			catch (Exception e)
-			{
+			catch (Exception e)	{
 				Debug.Log("On client connect exception " + e);
 			}
 		}
 		/// <summary> 	
 		/// Runs in background clientReceiveThread; Listens for incomming data. 	
 		/// </summary>     
-		public void ListenForData()
-		{
+		public void ListenForData()	{
 			Debug.Log("Attempting to connect to: " + ipAddress.ToString() + ":" + port.ToString());
 			try
 			{
 				socketConnection = new TcpClient(ipAddress, port);
 				byte[] bytes = new Byte[1024];
-				while (true)
-				{
+				while (true) {
 					// Get a stream object for reading 				
 					using (NetworkStream stream = socketConnection.GetStream())
 					{
@@ -121,16 +108,14 @@ namespace SP
 		public void sendTestMessage()
 		{
 			print("Sending a message");
-			if (socketConnection == null)
-			{
+			if (socketConnection == null) {
 				print("Socket connection is null, attempting to reconnect..");
 				ConnectToTcpServer();
 			}
-			sendStringMessage("Dipshit TCP");
+			sendStringMessage("Test TCP");
 		}
 
-		public void sendStringMessage(string msg)
-		{
+		public void sendStringMessage(string msg) {
 			byte[] clientMessageAsByteArray = Encoding.ASCII.GetBytes(msg);
 			sendBytes(clientMessageAsByteArray);
 		}
@@ -139,10 +124,8 @@ namespace SP
 		/// <summary> 	
 		/// Send message to server using socket connection. 	
 		/// </summary> 	
-		public void sendBytes(byte[] message)
-		{
-			if (socketConnection == null)
-			{
+		public void sendBytes(byte[] message) {
+			if (socketConnection == null) {
 				Debug.LogError("SP: Attempting to send bytes over TCP but socketConnection is null");
 				return;
 			}
@@ -150,14 +133,12 @@ namespace SP
 			{
 				// Get a stream object for writing. 			
 				NetworkStream stream = socketConnection.GetStream();
-				if (stream.CanWrite)
-				{
+				if (stream.CanWrite) {
 					// Write byte array to socketConnection stream.
 					stream.Write(message, 0, message.Length);
 					Debug.Log("TCP message sent successfully");
 				}
-				else
-				{
+				else {
 					Debug.LogError("SP: TCP Network stream cannot write.");
 				}
 			}
@@ -166,5 +147,5 @@ namespace SP
 				Debug.Log("Socket exception: " + socketException);
 			}
 		}
-	}
-}
+	} // end of class
+} // end of namespace

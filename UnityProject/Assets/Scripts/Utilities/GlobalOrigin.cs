@@ -43,7 +43,7 @@ namespace SP
         public static bool setTransform(Transform newTransform)
         {
             if (posSet == false) {
-                if (counter > 25)
+                if (counter > 25) // allows the marker to settle down..
                 {
                     Debug.Log("rotation set");
                     posSet = true;
@@ -64,7 +64,7 @@ namespace SP
         {
             if (!rotSet)
             {
-                if (counter > 25)
+                if (counter > 25) // allows the marker tracking to settle down..
                 {
                     Debug.Log("rotation set");
                     rotSet = true;

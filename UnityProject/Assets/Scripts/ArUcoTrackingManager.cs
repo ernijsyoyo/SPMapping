@@ -1,3 +1,17 @@
+// %BANNER_BEGIN%
+// ---------------------------------------------------------------------
+// %COPYRIGHT_BEGIN%
+//
+// Copyright (c) 2019-present, Magic Leap, Inc. All Rights Reserved.
+// Use of this file is governed by the Developer Agreement, located
+// here: https://auth.magicleap.com/terms/developer
+//
+// %COPYRIGHT_END%
+// ---------------------------------------------------------------------
+// %BANNER_END%
+
+// With modifications by Anna Horwath and Ernests Lavrinovics
+
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.MagicLeap;
@@ -74,17 +88,14 @@ public class ArUcoTrackingManager : MonoBehaviour
     //This is where the magic happens, anything we want to happen when markers are triggered goes here
     private void OnMarkerStatusChange(MLArucoTracker.Marker marker, MLArucoTracker.Marker.TrackingStatus status)
     {
-        if (status == MLArucoTracker.Marker.TrackingStatus.Tracked)
-        {
-            if (_arucoMarkerIds.Contains(marker.Id))
-            {
+        if (status == MLArucoTracker.Marker.TrackingStatus.Tracked) {
+            if (_arucoMarkerIds.Contains(marker.Id))  {
                 //This ensures we don't add the marker and prefab if we're already tracking it
                 return;
             }
 
             // Set the global origin to calibration marker's (#49) values
-            if (marker.Id == 49)
-            {
+            if (marker.Id == 49) {
                 var go = new GameObject();
                 go.transform.position = marker.Position;
                 go.transform.rotation = marker.Rotation;
@@ -94,15 +105,16 @@ public class ArUcoTrackingManager : MonoBehaviour
 
             //Instantiate the prefab that will follow that marker -- note: the TrackerBehavior component will handle position and rotation.
             GameObject arucoMarker = Instantiate(MLArucoMarkerPrefab);
+
             //Adjust the properties of the TrackerBehavior component to add the markerID and the dictionary we're comparing the marker to.
             MLArucoTrackerBehavior arucoBehavior = arucoMarker.GetComponent<MLArucoTrackerBehavior>();
             arucoBehavior.MarkerId = marker.Id;
             arucoBehavior.MarkerDictionary = MLArucoTracker.TrackerSettings.Dictionary;
+
             //Add the markerId so we don't do this again
             _arucoMarkerIds.Add(marker.Id);
         }
-        else if (_arucoMarkerIds.Contains(marker.Id))
-        {
+        else if (_arucoMarkerIds.Contains(marker.Id)) {
             //if the marker's status indicates it's no longer tracked, remove it from the list so if it comes back we'll detect it.
             _arucoMarkerIds.Remove(marker.Id);
         }

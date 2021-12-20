@@ -11,15 +11,15 @@ namespace SP
         // For testing..
         public Transform pivot;
         public Transform origin;
-        public bool test;
+        public bool testOutput;
 
         private void Update()
         {
-            if (test)
+            if (testOutput)
             {
-                test = false;
-                //print(posRelativeTo(pivot.transform.position, origin.transform.position));
-                //print(rotRelativeTo(pivot.transform.rotation, origin.transform.rotation).eulerAngles);
+                testOutput = false;
+                print(posRelativeTo(pivot.transform, origin.transform));
+                print(rotRelativeTo(pivot.transform.rotation, origin.transform.rotation).eulerAngles);
             }
         }
 
