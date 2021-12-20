@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<!-- Mapped Environment for Indoor Navigation -->
+<!-- Scene exported at time: 00:36:11; 17.11.2021 -->
+<Root>
+  <!--Meshes-->
+  <Mesh id="mesh:Room1" pos="(0.0, 0.0, 0.0)" rot="(0.0, 0.0, 0.0, 1.0)" />
+  <Mesh id="mesh:Meshes" pos="(0.0, 0.0, 0.0)" rot="(0.0, 0.0, 0.0, 1.0)" />
+</Root>
