@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 namespace SP
 {
+    /// <summary>
+    /// Prints messages to a console inside the application during runtime, for debugging
+    /// </summary>
     public class OnScreenLogger : MonoBehaviour
     {
         public Text myLog;
@@ -31,29 +34,6 @@ namespace SP
                 output = dog;
             }
             myLog.text = output;
-            
-
-            //var tl = myLog.text.Length;
-            //var sp = maxChars / 4;
-            //if (tl > maxChars)
-            //{
-            //    myLog.text = myLog.text.Substring(sp, maxChars - sp);
-            //}
-
-            //myLog.text = logString;
-            //string newString = "\n [" + type + "] : " + myLog;
-            //myLogQueue.Enqueue(newString);
-            //if (type == LogType.Exception)
-            //{
-            //    newString = "\n" + stackTrace;
-            //    myLogQueue.Enqueue(newString);
-            //}
-            //myLog.text = string.Empty;
-            //foreach (string mylog in myLogQueue)
-            //{
-            //    myLog.text += mylog;
-            //}
-            //print(myLog.text.Length);
         }
     }
 }

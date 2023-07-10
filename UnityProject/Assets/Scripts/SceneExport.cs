@@ -1,18 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
-using System.Linq;
+
 using System.Xml;
 using System.Xml.Linq;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using Object = UnityEngine.Object;
 using MagicLeap.Core;
 
 namespace SP
 {
-
     /// <summary>
     /// Main script for initializing a serializaiton to .XML
     /// </summary>
@@ -24,24 +20,18 @@ namespace SP
         /// </summary>
         public static XDocument doc;
         /// <summary>
-        /// Output path of the export
+        /// Initiate scene export via editor for debugging
         /// </summary>
-        private static string xmlOutputPath = null;
+        public bool testSceneExport = false;
         /// <summary>
-        /// Total number of channels occupied by audio streams
+        /// TCP Network Manager reference for transmission
         /// </summary>
-        public static int OccupiedChannelCount = 0;
-        public bool test = false;
-        // alternative private void Start(){ExportScene(FindObjectsOfType<SPMesh>()); }
-
         public NetworkManagerTCP TCP;
 
-        private void Update()
-        {
+        private void Update() {
             // Changes this to true to be enabled
-            if (test)
-            {
-                test = false;
+            if (testSceneExport)  {
+                testSceneExport = false;
                 ExportScene();
             }
 
@@ -55,8 +45,6 @@ namespace SP
             // Create arrays of all relevant objects
             var meshes = FindObjectsOfType<SPMesh>();
             var markers = FindObjectsOfType<MLArucoTrackerBehavior>();
-            // e.g.
-
 
             // Setup XML doc
             XmlWriterSettings settings = new XmlWriterSettings();
@@ -72,15 +60,9 @@ namespace SP
             WriteRootNode(doc);
 
             // Open a dialog window for saving the output path
-            #if UNITY_EDITOR
-            xmlOutputPath = UnityEditor.EditorUtility.SaveFilePanel("Save scene as XML", "", "sceneName", "xml");
-            #else
-            xmlOutputPath = "/tmp/Scene.xml";
-            #endif
             XElement sceneNode = doc.Document.Root; // Get the root node
 
             // Write elements according to their type
-
             print("Writing meshes..");
             WriteMeshes(sceneNode, meshes);
 
@@ -88,16 +70,13 @@ namespace SP
             print("Writing Markers..");
             WriteMarkers(sceneNode, markers);
 
-            // Save the file
-            //doc.Save(xmlOutputPath);
-            //print(doc.ToString());
+            // Transmit the file over TCP
             print("Exporting the scene...");
             TCP.sendStringMessage(doc.ToString());
-            //print("Scene exported at: " + xmlOutputPath);
+            
         }
 
-        private void WriteRootNode(XDocument doc)
-        {
+        private void WriteRootNode(XDocument doc) {
             doc.Add(new XElement("Root"));
         }
 
@@ -106,47 +85,37 @@ namespace SP
         /// </summary>
         /// <param name="XmlRoot"></param>
         /// <param name="allmeshes"></param>
-
-     
-        private void WriteMeshes(XElement XmlRoot, SPMesh[] allmeshes)
-        {
-            if (allmeshes.Length < 1)
-            {
+        private void WriteMeshes(XElement XmlRoot, SPMesh[] allmeshes) {
+            if (allmeshes.Length < 1) {
                 return;
             }
-            if (XmlRoot == null)
-            {
+            if (XmlRoot == null) {
                 print("XMLRoot is null");
             }
             XmlRoot.Document.Root.Add(new XComment("Meshes"));
 
-            foreach (var mesh in allmeshes)
-            {
-                // Check if previously exported, compare via IDs
-
-
+            foreach (var mesh in allmeshes) {
                 var MeshNode = GetMeshNode(mesh);
                 XmlRoot.Add(MeshNode);
-
             }
         }
 
-        // Get MarkerNode (pos, rot)
-        private void WriteMarkers(XElement XmlRoot, MLArucoTrackerBehavior[] allmarkers)
-        {
-            if (allmarkers.Length < 1)
-            {
+        /// <summary>
+        /// Write all markers and their positions
+        /// </summary>
+        /// <param name="XmlRoot"></param>
+        /// <param name="allmarkers"></param>
+        private void WriteMarkers(XElement XmlRoot, MLArucoTrackerBehavior[] allmarkers) {
+            if (allmarkers.Length < 1) {
                 return;
             }
-
-            if (XmlRoot == null)
-            {
+            if (XmlRoot == null) {
                 print("XMLRoot is null");
             }
             XmlRoot.Document.Root.Add(new XComment("Markers"));
 
-            foreach (var marker in allmarkers)
-            {
+            // Convert each markers pos/rot relative to global origin, add it to XML root
+            foreach (var marker in allmarkers) {
                 var MarkerPos = TransformConversions.posRelativeTo(GlobalOrigin.getTransform(), marker.gameObject.transform);
                 var MarkerRot = TransformConversions.rotRelativeTo(GlobalOrigin.getRot(), marker.gameObject.transform.rotation).eulerAngles;
 
@@ -162,24 +131,18 @@ namespace SP
 
 
         /// <summary>
-        /// Get an EIF formatted Mesh node
+        /// Get a Mesh node
         /// </summary>
         /// <param name="mesh">Mesh for which to retrieve the formatted XML node</param>
         /// <param name="transform">Optional transform</param>
         /// <returns></returns>
-
-        // before export, calculate position relative to the global position - Scripts - Utilities - TransformConversions Lines 135/136
-
-        private XElement GetMeshNode(SPMesh mesh)
-        {
+        private XElement GetMeshNode(SPMesh mesh) {
+            // Get mesh vertices and faces
             mesh.resetVerticesNoDupesArray();
             List<Vector3> GeometryVertices = mesh.GetVertices();
-            List<int> trianglePos = mesh.getMeshFacesNoDupes(); //getTrianglesObject
+            List<int> trianglePos = mesh.getMeshFacesNoDupes();
 
-            //marker, add values relative to the global position (to pos, rot)
-            //List<Vector3> MarkerPos = 
-            //List<Quaternion> MarkerRot =
-
+            // Calculate mesh position and rotation relative to global origin
             var meshPos = TransformConversions.posRelativeTo(GlobalOrigin.getTransform(), gameObject.transform);
             var meshRot = TransformConversions.rotRelativeTo(GlobalOrigin.getRot(), gameObject.transform.rotation).eulerAngles;
 
@@ -218,7 +181,6 @@ namespace SP
             }
             return MeshNode;
         }
-
     } // end of class
 } // end of namespace
 
